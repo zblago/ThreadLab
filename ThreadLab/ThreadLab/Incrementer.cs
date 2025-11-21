@@ -78,13 +78,16 @@ namespace ThreadLab
         {
             var threads = new Thread[numberOfThreads];
 
-            _newIncrementStart = (long)((numberOfThreads - 1) * numberOfIncrementsPerThread);
-            _newIncrementEnd = (long)(numberOfThreads * numberOfIncrementsPerThread);
+            //_newIncrementStart = (long)((numberOfThreads - 1) * numberOfIncrementsPerThread);
+            //_newIncrementEnd = (long)(numberOfThreads * numberOfIncrementsPerThread);
 
             for (var i = 0; i < numberOfThreads; i++)
             {
                 var start = (long)(i * numberOfIncrementsPerThread);
                 var end = (long)((i + 1) * numberOfIncrementsPerThread);
+
+                _newIncrementStart = start;
+                _newIncrementEnd = end;
 
                 threads[i] = new Thread(() => {
                     var localStart = start;
@@ -128,8 +131,10 @@ namespace ThreadLab
             {
                 IncrementWaitCount();
 
-                _workerWaitHandle.Set();
-                _mainWaitHandle.WaitOne();
+                if (_newIncrementStart == 870000)
+                {
+                    var start = "start";
+                }
 
                 _newIncrementStart = _newIncrementEnd;
                 _newIncrementEnd = _newIncrementStart + (long)_numberOfIncrementsPerThread;
@@ -143,6 +148,9 @@ namespace ThreadLab
 
                     break;
                 }
+
+                _workerWaitHandle.Set();
+                _mainWaitHandle.WaitOne();
             }
         }
 
