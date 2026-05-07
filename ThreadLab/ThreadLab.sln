@@ -5,6 +5,8 @@ VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreadLab", "ThreadLab\ThreadLab.csproj", "{203A0948-3FF7-4784-BE22-7101D65202F7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreadLab.Proofs", "ThreadLab.Proofs\ThreadLab.Proofs.csproj", "{5680AEF4-2182-4838-AB69-063288FB1E25}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{203A0948-3FF7-4784-BE22-7101D65202F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{203A0948-3FF7-4784-BE22-7101D65202F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{203A0948-3FF7-4784-BE22-7101D65202F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5680AEF4-2182-4838-AB69-063288FB1E25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5680AEF4-2182-4838-AB69-063288FB1E25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5680AEF4-2182-4838-AB69-063288FB1E25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5680AEF4-2182-4838-AB69-063288FB1E25}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

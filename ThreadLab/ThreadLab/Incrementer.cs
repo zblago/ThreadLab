@@ -18,7 +18,6 @@ namespace ThreadLab
 
         private static IncrementerRepository _incrementerRepository = new IncrementerRepository();
 
-        private static object _lock = new object();
         private static int _setCount = 0;
         private static int _waitCount = 0;
 
@@ -55,7 +54,7 @@ namespace ThreadLab
             }
 
             _incrementerRepository.UpdateThreadJobDateTimeFinished(threadJobId);
-            Console.WriteLine("All threads are done. Time elapsed = " + stopWatch.Elapsed.TotalSeconds);
+            Console.WriteLine("All threads are done. Time elapsed = " + stopWatch.Elapsed.TotalSeconds + " SetCount = " + _setCount + " WaitCount = " + _waitCount);
             Console.WriteLine("Running tests now...");
 
             var hasDuplicateStartNumber = _incrementerRepository.HasDuplicateStartNumber(threadJobId);
@@ -105,15 +104,13 @@ namespace ThreadLab
                     _incrementerRepository.AddThreadIteration(threadJobId, CurrentThreadInfo.CurrentManagedThreadId, CurrentThreadInfo.IsBackgroundThread, incrementStart, incrementEnd);
 
                 //Here is the core of the experiment; incrementing by one in each cycle
-                for (var i = incrementStart; i < incrementEnd; i++) ;
+                for (var i = incrementStart; i < incrementEnd; i++);
 
                 _incrementerRepository.UpdateThreadIterationDateTimeFinished(threadIterationId);
-
                 if (WaitHandle.WaitAny(new WaitHandle[] { _workerWaitHandle, token.WaitHandle }) != 0)
                 {
                     break;
                 }
-
                 incrementStart = _newIncrementStart;
                 incrementEnd = _newIncrementEnd;
 
@@ -128,13 +125,12 @@ namespace ThreadLab
             while (true)
             {
                 _newIncrementStart = _newIncrementEnd;
-                _newIncrementEnd = _newIncrementStart + (long)_numberOfIncrementsPerThread;
+                _newIncrementEnd = _newIncrementStart + _numberOfIncrementsPerThread > int.MaxValue
+                    ? int.MaxValue
+                    : _newIncrementStart + _numberOfIncrementsPerThread;
 
-                var maxValue = (long)int.MaxValue; //Don't go over long
-                if (_newIncrementEnd > maxValue)
+                if (_newIncrementStart >= int.MaxValue)
                 {
-                    _newIncrementEnd = maxValue;
-
                     cancellationTokenSource.Cancel();
 
                     break;
@@ -149,18 +145,12 @@ namespace ThreadLab
 
         private static void IncrementSetCount()
         {
-            lock (_lock)
-            {
-                ++_setCount;
-            }
+            ++_setCount;
         }
 
         private static void IncrementWaitCount()
         {
-            lock (_lock)
-            {
-                ++_waitCount;
-            }
+            ++_waitCount;
         }
     }
 }
