@@ -6,7 +6,7 @@
 
         public int AddThreadJob(int managedThreadId, bool isBackground, int numberOfThreads, int numberOfStepsPerThread)
         {
-            lock (_threadJobLock)
+            //lock (_threadJobLock)
             {
                 var threadJob = new ThreadJob
                 {
@@ -29,7 +29,7 @@
 
         public void UpdateThreadJobDateTimeFinished(int threadJobId)
         {
-            lock (_threadJobLock)
+            //lock (_threadJobLock)
             {
                 using (var context = new ThreadDbContext())
                 {
@@ -127,7 +127,7 @@
 
         public int AddThreadIteration(int threadJobId, int managedThreadId, bool isBackground, long startNumber, long endNumber)
         {
-            lock (_threadJobLock)
+            //lock (_threadJobLock)
             {
                 var threadIteration = new ThreadIteration
                 {
@@ -151,7 +151,7 @@
 
         public void UpdateThreadIterationDateTimeFinished(int threadIterationId)
         {
-            lock (_threadJobLock)
+            //lock (_threadJobLock)
             {
                 using (var context = new ThreadDbContext())
                 {

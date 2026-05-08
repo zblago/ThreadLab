@@ -33,6 +33,11 @@ namespace ThreadLab
             stopWatch.Restart();
 
             var threads = CreateWorkerThreads(numberOfThreads, numberOfIncrementsPerThread, threadJobId);
+            if (threads.Length == 0)
+            {
+                return;
+            }
+
             Console.WriteLine("Worker threads created. Time elapsed = " + stopWatch.Elapsed.TotalSeconds);
             stopWatch.Restart();
 
@@ -81,6 +86,14 @@ namespace ThreadLab
             {
                 var start = (long)(i * numberOfIncrementsPerThread);
                 var end = (long)((i + 1) * numberOfIncrementsPerThread);
+
+                if (start > int.MaxValue || end > int.MaxValue)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Initial range for a first run exceeded. Choose lower numbers e.g. Number of threads = 500, Batch size = 1000000.");
+
+                    return Array.Empty<Thread>();
+                }
 
                 //Initial value for the second batch.
                 _newIncrementStart = start;
