@@ -1,41 +1,33 @@
 ﻿namespace ThreadLab.Database
 {
     internal class IncrementerRepository
-    {        
-        private static readonly object _threadJobLock = new object();
-
+    {
         public int AddThreadJob(int managedThreadId, bool isBackground, int numberOfThreads, int numberOfStepsPerThread)
         {
-            //lock (_threadJobLock)
+            var threadJob = new ThreadJob
             {
-                var threadJob = new ThreadJob
-                {
-                    ManagedThreadId = managedThreadId,
-                    IsBackground = isBackground,
-                    NumberOfThreads = numberOfThreads,
-                    NumberOfStepsPerThread = numberOfStepsPerThread,
-                    DateTimeStarted = DateTime.UtcNow
-                };
+                ManagedThreadId = managedThreadId,
+                IsBackground = isBackground,
+                NumberOfThreads = numberOfThreads,
+                NumberOfStepsPerThread = numberOfStepsPerThread,
+                DateTimeStarted = DateTime.UtcNow
+            };
 
-                using (var context = new ThreadDbContext())
-                {
-                    context.ThreadJobs.Add(threadJob);
-                    context.SaveChanges();
-                }
+            using (var context = new ThreadDbContext())
+            {
+                context.ThreadJobs.Add(threadJob);
+                context.SaveChanges();
+            }
 
-                return threadJob.ThreadJobId;
-            }        
+            return threadJob.ThreadJobId;
         }
 
         public void UpdateThreadJobDateTimeFinished(int threadJobId)
         {
-            //lock (_threadJobLock)
+            using (var context = new ThreadDbContext())
             {
-                using (var context = new ThreadDbContext())
-                {
-                    context.ThreadJobs.Find(threadJobId)!.DateTimeFinished = DateTime.UtcNow;
-                    context.SaveChanges();
-                }
+                context.ThreadJobs.Find(threadJobId)!.DateTimeFinished = DateTime.UtcNow;
+                context.SaveChanges();
             }
         }
 
@@ -127,37 +119,31 @@
 
         public int AddThreadIteration(int threadJobId, int managedThreadId, bool isBackground, long startNumber, long endNumber)
         {
-            //lock (_threadJobLock)
+            var threadIteration = new ThreadIteration
             {
-                var threadIteration = new ThreadIteration
-                {
-                    ThreadJobId = threadJobId,
-                    ManagedThreadId = managedThreadId,
-                    IsBackground = isBackground,
-                    StartNumber = startNumber,
-                    EndNumber = endNumber,
-                    DateTimeStarted = DateTime.UtcNow
-                };
+                ThreadJobId = threadJobId,
+                ManagedThreadId = managedThreadId,
+                IsBackground = isBackground,
+                StartNumber = startNumber,
+                EndNumber = endNumber,
+                DateTimeStarted = DateTime.UtcNow
+            };
 
-                using (var context = new ThreadDbContext())
-                {
-                    context.ThreadIterations.Add(threadIteration);
-                    context.SaveChanges();
-                }
-
-                return threadIteration.ThreadIterationId;
+            using (var context = new ThreadDbContext())
+            {
+                context.ThreadIterations.Add(threadIteration);
+                context.SaveChanges();
             }
+
+            return threadIteration.ThreadIterationId;
         }
 
         public void UpdateThreadIterationDateTimeFinished(int threadIterationId)
         {
-            //lock (_threadJobLock)
+            using (var context = new ThreadDbContext())
             {
-                using (var context = new ThreadDbContext())
-                {
-                    context.ThreadIterations.Find(threadIterationId)!.DateTimeFinished = DateTime.UtcNow;
-                    context.SaveChanges();
-                }
+                context.ThreadIterations.Find(threadIterationId)!.DateTimeFinished = DateTime.UtcNow;
+                context.SaveChanges();
             }
         }
     }

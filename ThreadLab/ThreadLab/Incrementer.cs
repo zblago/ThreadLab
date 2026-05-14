@@ -29,21 +29,20 @@ namespace ThreadLab
             _numberOfIncrementsPerThread = numberOfIncrementsPerThread;
 
             var threadJobId = _incrementerRepository.AddThreadJob(CurrentThreadInfo.CurrentManagedThreadId, CurrentThreadInfo.IsBackgroundThread, numberOfThreads, numberOfIncrementsPerThread);
-            Console.WriteLine("Thread Job record created. Time elapsed = " + stopWatch.Elapsed.TotalSeconds);
             stopWatch.Restart();
 
+            Console.WriteLine("Creating worker threads...");
             var threads = CreateWorkerThreads(numberOfThreads, numberOfIncrementsPerThread, threadJobId);
             if (threads.Length == 0)
             {
                 return;
             }
+            Console.WriteLine("Worker threads created.");
 
-            Console.WriteLine("Worker threads created. Time elapsed = " + stopWatch.Elapsed.TotalSeconds);
-            stopWatch.Restart();
-
-            //Create and start main thread
+            //Create and start main thread            
             Thread mainThread = new Thread(x => MainThreadJob());
             mainThread.Start();
+            Console.WriteLine("Main thread started. Time elapsed = " + stopWatch.Elapsed.TotalSeconds + " Starting worker threads...");
 
             //Create and start worker threads
             for (var i = 0; i < threads.Length; i++)
@@ -51,6 +50,7 @@ namespace ThreadLab
                 threads[i].Start();
             }
             stopWatch.Restart();
+            Console.WriteLine("All worker threads started. Time elapsed = " + stopWatch.Elapsed.TotalSeconds);
 
             //Wait for the threads to be completed
             for (var i = 0; i < threads.Length; i++)
@@ -153,6 +153,8 @@ namespace ThreadLab
 
                 _workerWaitHandle.Set();
                 _mainWaitHandle.WaitOne();
+
+                Console.WriteLine("Counting to " + _newIncrementStart);
             }
         }
 
