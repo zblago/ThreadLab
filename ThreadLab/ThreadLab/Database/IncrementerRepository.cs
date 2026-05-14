@@ -2,6 +2,8 @@
 {
     internal class IncrementerRepository
     {
+        private static readonly object _threadJobLock = new object();
+
         public int AddThreadJob(int managedThreadId, bool isBackground, int numberOfThreads, int numberOfStepsPerThread)
         {
             var threadJob = new ThreadJob
@@ -129,10 +131,13 @@
                 DateTimeStarted = DateTime.UtcNow
             };
 
-            using (var context = new ThreadDbContext())
+            lock (_threadJobLock)
             {
-                context.ThreadIterations.Add(threadIteration);
-                context.SaveChanges();
+                using (var context = new ThreadDbContext())
+                {
+                    context.ThreadIterations.Add(threadIteration);
+                    context.SaveChanges();
+                }
             }
 
             return threadIteration.ThreadIterationId;
@@ -140,10 +145,13 @@
 
         public void UpdateThreadIterationDateTimeFinished(int threadIterationId)
         {
-            using (var context = new ThreadDbContext())
+            lock (_threadJobLock)
             {
-                context.ThreadIterations.Find(threadIterationId)!.DateTimeFinished = DateTime.UtcNow;
-                context.SaveChanges();
+                using (var context = new ThreadDbContext())
+                {
+                    context.ThreadIterations.Find(threadIterationId)!.DateTimeFinished = DateTime.UtcNow;
+                    context.SaveChanges();
+                }
             }
         }
     }

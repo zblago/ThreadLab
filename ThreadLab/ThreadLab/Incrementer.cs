@@ -42,7 +42,7 @@ namespace ThreadLab
             //Create and start main thread            
             Thread mainThread = new Thread(x => MainThreadJob());
             mainThread.Start();
-            Console.WriteLine("Main thread started. Time elapsed = " + stopWatch.Elapsed.TotalSeconds + " Starting worker threads...");
+            Console.WriteLine("Main thread started. Time elapsed = " + stopWatch.Elapsed.TotalSeconds + ". Starting worker threads...");
 
             //Create and start worker threads
             for (var i = 0; i < threads.Length; i++)
