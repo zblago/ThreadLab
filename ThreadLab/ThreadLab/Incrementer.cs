@@ -37,7 +37,9 @@ namespace ThreadLab
             {
                 return;
             }
-            Console.WriteLine("Worker threads created.");
+            Console.WriteLine($"Worker threads created." +
+                $"{(threads.Count() < numberOfThreads ? $" {threads.Count()} threads created since not available range for reminaing ones." +
+                $"Consider fine tuning input parameters" : string.Empty)}");
 
             //Create and start main thread            
             Thread mainThread = new Thread(x => MainThreadJob());
@@ -59,7 +61,7 @@ namespace ThreadLab
             }
 
             _incrementerRepository.UpdateThreadJobDateTimeFinished(threadJobId);
-            Console.WriteLine("All threads are done. Time elapsed = " + stopWatch.Elapsed.TotalSeconds + " SetCount = " + _setCount + " WaitCount = " + _waitCount);
+            Console.WriteLine("All threads are done. Time elapsed = " + stopWatch.Elapsed.TotalSeconds + ". SetCount = " + _setCount + ", WaitCount = " + _waitCount);
             Console.WriteLine("Running tests now...");
 
             var hasDuplicateStartNumber = _incrementerRepository.HasDuplicateStartNumber(threadJobId);
@@ -80,12 +82,17 @@ namespace ThreadLab
 
         private static Thread[] CreateWorkerThreads(int numberOfThreads, int numberOfIncrementsPerThread, int threadJobId)
         {
-            var threads = new Thread[numberOfThreads];
+            var threads = new List<Thread>();
 
             for (var i = 0; i < numberOfThreads; i++)
             {
                 var start = (long)(i * numberOfIncrementsPerThread);
                 var end = (long)((i + 1) * numberOfIncrementsPerThread);
+
+                if (end >= int.MaxValue || end < 0)
+                {
+                    break;
+                }
 
                 if (start > int.MaxValue || end > int.MaxValue)
                 {
@@ -95,18 +102,37 @@ namespace ThreadLab
                     return Array.Empty<Thread>();
                 }
 
-                //Initial value for the second batch.
+                //Initial value for the next batch.
                 _newIncrementStart = start;
                 _newIncrementEnd = end;
 
-                threads[i] = new Thread(() => {
+                //remove
+                if (_newIncrementEnd >= int.MaxValue)
+                {
+                    break;
+                }
+
+                //remove
+                if (_newIncrementEnd >= int.MaxValue)
+                {
+                    break;
+                }
+
+                threads.Add(new Thread(() =>
+                {
                     var localStart = start;
                     var localEnd = end;
+
+                    if (localStart >= int.MaxValue || localEnd >= int.MaxValue)
+                    {
+                        var t = "";
+                    }
+
                     WorkerThreadJob(localStart, localEnd, threadJobId);
-                });
+                }));
             }
 
-            return threads;
+            return threads.ToArray();
         }
 
         private static void WorkerThreadJob(long incrementStart, long incrementEnd, int threadJobId)
@@ -116,6 +142,12 @@ namespace ThreadLab
                 var threadIterationId =
                     _incrementerRepository.AddThreadIteration(threadJobId, CurrentThreadInfo.CurrentManagedThreadId, CurrentThreadInfo.IsBackgroundThread, incrementStart, incrementEnd);
 
+                //remove
+                if (incrementStart < 0 || incrementEnd < 0 || incrementStart >= int.MaxValue || incrementEnd >= int.MaxValue)
+                {
+                    var t = "1";
+                }
+
                 //Here is the core of the experiment; incrementing by one in each cycle
                 for (var i = incrementStart; i < incrementEnd; i++);
 
@@ -124,6 +156,13 @@ namespace ThreadLab
                 {
                     break;
                 }
+
+                //remove
+                if (_newIncrementStart < 0 || _newIncrementEnd < 0 || _newIncrementStart >= int.MaxValue || _newIncrementEnd >= int.MaxValue)
+                {
+                    var t = "1";
+                }
+
                 incrementStart = _newIncrementStart;
                 incrementEnd = _newIncrementEnd;
 
@@ -138,9 +177,15 @@ namespace ThreadLab
             while (true)
             {
                 _newIncrementStart = _newIncrementEnd;
-                _newIncrementEnd = _newIncrementStart + _numberOfIncrementsPerThread > int.MaxValue
+                _newIncrementEnd = (long)_newIncrementStart + (long)_numberOfIncrementsPerThread > int.MaxValue
                     ? int.MaxValue
                     : _newIncrementStart + _numberOfIncrementsPerThread;
+
+                //remove
+                if (_newIncrementStart < 0 || _newIncrementEnd < 0 || _newIncrementStart >= int.MaxValue || _newIncrementEnd >= int.MaxValue)
+                {
+                    var t = "1";
+                }
 
                 if (_newIncrementStart >= int.MaxValue)
                 {
