@@ -5,9 +5,14 @@ namespace ThreadLab.Database
 {
     internal class ThreadDbContext : DbContext
     {
+        public ThreadDbContext()
+        { 
+        }
+
         public DbSet<ThreadJob> ThreadJobs { get; set; }
         public DbSet<ThreadIteration> ThreadIterations { get; set; }
 
+        
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // Load configuration from appsettings.json
@@ -16,20 +21,22 @@ namespace ThreadLab.Database
                 .AddJsonFile("appsettings.json", optional: false)
                 .Build();
 
-            var useInMemory = configuration.GetValue<bool>("UseInMemoryDatabase");
+            var useInMemory = configuration.GetValue<bool>("UseInMemoryDbContext");
             if (useInMemory)
             {
-                optionsBuilder.UseInMemoryDatabase("ThreadLabDb");
+                optionsBuilder.UseInMemoryDatabase("ThreadLab");
             }
             else
             {
-                var connectionString = configuration.GetConnectionString("DefaultConnection");
+                var connectionString = configuration.GetConnectionString("ThreadLab");
                 optionsBuilder.UseSqlServer(connectionString);
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<ThreadJob>()
                 .Property(u => u.ThreadJobId)
                 .ValueGeneratedOnAdd();

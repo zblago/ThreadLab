@@ -32,47 +32,26 @@
 
         public void UpdateThreadJobDateTimeFinished(int threadJobId)
         {
-            //using (var context = new ThreadDbContext())
-            {
-                dbContext.ThreadJobs.Find(threadJobId)!.DateTimeFinished = DateTime.UtcNow;
-                dbContext.SaveChanges();
-            }
+            dbContext.ThreadJobs.Find(threadJobId)!.DateTimeFinished = DateTime.UtcNow;
+            dbContext.SaveChanges();
         }
 
         public bool HasDuplicateStartNumber(int threadJobId)
         {
-            //using (var context = new ThreadDbContext())
-            {
-                var x1 = dbContext.ThreadIterations
-                    .Where(x => x.ThreadJobId == threadJobId)
-                    .GroupBy(x => x.StartNumber)
-                    .Where(x => x.Count() > 1)
-                    .Any();
-
-                return dbContext.ThreadIterations
-                    .Where(x => x.ThreadJobId == threadJobId)
-                    .GroupBy(x => x.StartNumber)
-                    .Where(x => x.Count() > 1)
-                    .Any();
-            }
+            return dbContext.ThreadIterations
+                .Where(x => x.ThreadJobId == threadJobId)
+                .GroupBy(x => x.StartNumber)
+                .Where(x => x.Count() > 1)
+                .Any();
         }
 
         public bool HasDuplicateEndNumber(int threadJobId)
         {
-            //using (var context = new ThreadDbContext())
-            {
-                var x1 = dbContext.ThreadIterations
-                    .Where(x => x.ThreadJobId == threadJobId)
-                    .GroupBy(x => x.EndNumber)
-                    .Where(x => x.Count() > 1)
-                    .Any();
-
-                return dbContext.ThreadIterations
-                    .Where(x => x.ThreadJobId == threadJobId)
-                    .GroupBy(x => x.EndNumber)
-                    .Where(x => x.Count() > 1)
-                    .Any();
-            }
+            return dbContext.ThreadIterations
+                .Where(x => x.ThreadJobId == threadJobId)
+                .GroupBy(x => x.EndNumber)
+                .Where(x => x.Count() > 1)
+                .Any();
         }
 
         public bool HasGaps(int threadJobId)
@@ -92,16 +71,14 @@
             {
                 var itemsToSkip = (pageNo - 1) * pageSize;
                 var threadIterations = new List<ThreadIteration>();
-                //using (var context = new ThreadDbContext())
-                {
-                    threadIterations = dbContext
-                        .ThreadIterations
-                        .Where(x => x.ThreadJobId == threadJobId)
-                        .OrderBy(x => x.StartNumber)
-                        .Skip(itemsToSkip)
-                        .Take(pageSize)
-                        .ToList();
-                }
+
+                threadIterations = dbContext
+                    .ThreadIterations
+                    .Where(x => x.ThreadJobId == threadJobId)
+                    .OrderBy(x => x.StartNumber)
+                    .Skip(itemsToSkip)
+                    .Take(pageSize)
+                    .ToList();
 
                 var i = 0;
                 foreach (var iteration in threadIterations)
@@ -139,11 +116,8 @@
 
             lock (_threadJobLock)
             {
-                //using (var context = new ThreadDbContext())
-                {
-                    dbContext.ThreadIterations.Add(threadIteration);
-                    dbContext.SaveChanges();
-                }
+                dbContext.ThreadIterations.Add(threadIteration);
+                dbContext.SaveChanges();
             }
 
             return threadIteration.ThreadIterationId;
@@ -153,11 +127,8 @@
         {
             lock (_threadJobLock)
             {
-                //using (var context = new ThreadDbContext())
-                {
-                    dbContext.ThreadIterations.Find(threadIterationId)!.DateTimeFinished = DateTime.UtcNow;
-                    dbContext.SaveChanges();
-                }
+                dbContext.ThreadIterations.Find(threadIterationId)!.DateTimeFinished = DateTime.UtcNow;
+                dbContext.SaveChanges();
             }
         }
     }

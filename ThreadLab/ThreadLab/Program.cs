@@ -3,7 +3,7 @@
 Console.Write("Number of threads: ");
 var numberOfThreads = int.Parse(Console.ReadLine()!);
 
-Console.Write("Batch size (how many times you want to increment per batch): ");
+Console.Write("Batch size (number of increments per batch): ");
 Console.WriteLine();
 var numberOfIncrementsPerThread = int.Parse(Console.ReadLine()!);
 
