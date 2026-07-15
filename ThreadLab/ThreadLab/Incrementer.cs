@@ -125,12 +125,8 @@ namespace ThreadLab
                 var threadIterationId =
                     _incrementerRepository.AddThreadIteration(threadJobId, CurrentThreadInfo.CurrentManagedThreadId, CurrentThreadInfo.IsBackgroundThread, incrementStart, incrementEnd);
 
-
                 //Here is the core of the experiment; incrementing by one in each cycle
-                for (var i = incrementStart; i < incrementEnd; i++)
-                { 
-                    var t = "0";
-                }
+                for (var i = incrementStart; i < incrementEnd; i++);
 
                 _incrementerRepository.UpdateThreadIterationDateTimeFinished(threadIterationId);
                 if (WaitHandle.WaitAny(new WaitHandle[] { _workerWaitHandle, token.WaitHandle }) != 0)
