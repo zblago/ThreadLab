@@ -21,12 +21,12 @@ namespace ThreadLab.Database
                 .AddJsonFile("appsettings.json", optional: false)
                 .Build();
 
-            var useInMemory = configuration.GetValue<bool>("UseInMemoryDbContext");
-            if (useInMemory)
+            var storageType = Enum.Parse<StorageType>(configuration.GetValue<string>("StorageType"));
+            if (storageType == StorageType.InMemoryEfDbContext)
             {
                 optionsBuilder.UseInMemoryDatabase("ThreadLab");
             }
-            else
+            else if (storageType == StorageType.SQLServerEfDbContext)
             {
                 var connectionString = configuration.GetConnectionString("ThreadLab");
                 optionsBuilder.UseSqlServer(connectionString);

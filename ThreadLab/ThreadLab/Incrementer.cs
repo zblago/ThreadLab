@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Extensions.Configuration;
+using System.Diagnostics;
 using ThreadLab.Database;
 using ThreadLab.Utility;
 
@@ -16,10 +17,28 @@ namespace ThreadLab
         private static long _newIncrementEnd = 0;
         private static int _numberOfIncrementsPerThread = 0;
 
-        private static IncrementerRepository _incrementerRepository = new IncrementerRepository();
+        private static IIncrementerRepository _incrementerRepository;
 
         private static int _setCount = 0;
         private static int _waitCount = 0;
+
+        static Incrementer()
+        {
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false)
+                .Build();
+
+            var storageType = Enum.Parse<StorageType>(configuration.GetValue<string>("StorageType"));
+            if (storageType == StorageType.InMemoryEfDbContext || storageType == StorageType.SQLServerEfDbContext)
+            {
+                _incrementerRepository = new IncrementerRepository();
+            }
+            else
+            { 
+                _incrementerRepository = new IncrementerMemoryRepository();
+            }
+        }
 
         public static void Run(int numberOfThreads, int numberOfIncrementsPerThread)
         {

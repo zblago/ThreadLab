@@ -1,6 +1,6 @@
 ﻿namespace ThreadLab.Database
 {
-    internal class IncrementerRepository
+    internal class IncrementerRepository : IIncrementerRepository
     {
         private static readonly object _threadJobLock = new object();
         private ThreadDbContext dbContext;
@@ -21,7 +21,7 @@
                 DateTimeStarted = DateTime.UtcNow
             };
 
-            
+
             {
                 dbContext.ThreadJobs.Add(threadJob);
                 dbContext.SaveChanges();
