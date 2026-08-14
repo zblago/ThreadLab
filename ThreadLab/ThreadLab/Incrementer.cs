@@ -16,6 +16,7 @@ namespace ThreadLab
         private static long _newIncrementStart = 0;
         private static long _newIncrementEnd = 0;
         private static int _numberOfIncrementsPerThread = 0;
+        private static int _exitedThreadCount = 0;
 
         private static IIncrementerRepository _incrementerRepository;
 
@@ -70,8 +71,6 @@ namespace ThreadLab
             {
                 threads[i].Start();
             }
-            stopWatch.Restart();
-            Console.WriteLine("All worker threads started. Time elapsed = " + Math.Floor(stopWatch.Elapsed.TotalSeconds));
 
             //Wait for the threads to be completed
             for (var i = 0; i < threads.Length; i++)
@@ -80,6 +79,7 @@ namespace ThreadLab
             }
 
             _incrementerRepository.UpdateThreadJobDateTimeFinished(threadJobId);
+            stopWatch.Stop();
             Console.WriteLine("All threads are done. Time elapsed = " + stopWatch.Elapsed.TotalSeconds + ". SetCount = " + _setCount + ", WaitCount = " + _waitCount);
             Console.WriteLine("Running tests now...");
 
@@ -144,12 +144,19 @@ namespace ThreadLab
                 var threadIterationId =
                     _incrementerRepository.AddThreadIteration(threadJobId, CurrentThreadInfo.CurrentManagedThreadId, CurrentThreadInfo.IsBackgroundThread, incrementStart, incrementEnd);
 
+                Console.WriteLine("Counting to " + incrementEnd);
                 //Here is the core of the experiment; incrementing by one in each cycle
-                for (var i = incrementStart; i < incrementEnd; i++);
+                for (var i = incrementStart; i < incrementEnd; i++)
+                {
+                    var hallo = "hallo";
+                }
+                Console.WriteLine("Counting to " + incrementEnd + " completed");
 
                 _incrementerRepository.UpdateThreadIterationDateTimeFinished(threadIterationId);
                 if (WaitHandle.WaitAny(new WaitHandle[] { _workerWaitHandle, token.WaitHandle }) != 0)
                 {
+                    ++_exitedThreadCount;
+                    Console.WriteLine($"Exiting the thread, {_exitedThreadCount}");
                     break;
                 }
 
@@ -182,8 +189,6 @@ namespace ThreadLab
 
                 _workerWaitHandle.Set();
                 _mainWaitHandle.WaitOne();
-
-                Console.WriteLine("Counting to " + _newIncrementStart);
             }
         }
 

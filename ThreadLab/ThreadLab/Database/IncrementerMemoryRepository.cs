@@ -1,4 +1,6 @@
-﻿namespace ThreadLab.Database
+﻿using System.Security.Cryptography.X509Certificates;
+
+namespace ThreadLab.Database
 {
     internal class IncrementerMemoryRepository : IIncrementerRepository
     {
@@ -120,19 +122,21 @@
             long startNumber,
             long endNumber)
         {
-            var threadIteration = new ThreadIteration
-            {
-                ThreadIterationId = _nextThreadIterationId++,
-                ThreadJobId = threadJobId,
-                ManagedThreadId = managedThreadId,
-                IsBackground = isBackground,
-                StartNumber = startNumber,
-                EndNumber = endNumber,
-                DateTimeStarted = DateTime.UtcNow
-            };
+            var threadIteration = new ThreadIteration();
 
             lock (_threadJobLock)
             {
+                threadIteration = new ThreadIteration
+                {
+                    ThreadIterationId = _nextThreadIterationId++,
+                    ThreadJobId = threadJobId,
+                    ManagedThreadId = managedThreadId,
+                    IsBackground = isBackground,
+                    StartNumber = startNumber,
+                    EndNumber = endNumber,
+                    DateTimeStarted = DateTime.UtcNow
+                };
+
                 _threadIterations.Add(threadIteration);
             }
 

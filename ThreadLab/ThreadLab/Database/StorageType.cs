@@ -4,6 +4,6 @@
     {
         SQLServerEfDbContext,
         InMemoryEfDbContext,
-        RawMemory
+        InMemoryCollection
     }
 }
