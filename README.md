@@ -9,6 +9,8 @@ Available `StorageType` values:
 * `InMemoryEfDbContext` - in-memory DB context
 * `InMemoryCollection` - raw C# (CLR list)
 
+# Choose one of the followin, DB setup or EF Core Migrations to create DB
+
 ## DB setup
 
 1. Run the [database setup script](https://github.com/zblago/ThreadLab/blob/main/ThreadLab/ThreadLab/DatabaseScripts/script.sql).
