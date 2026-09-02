@@ -20,7 +20,7 @@ For example:
 ```json
 {
   "ConnectionStrings": {
-    "ThreadLab": "Server=(LocalDB)\\MSSQLLocalDB;Database=ThreadLab1;Trusted_Connection=True;"
+    "ThreadLab": "Server=(LocalDB)\\MSSQLLocalDB;Database=ThreadLab;Trusted_Connection=True;"
   },
   "StorageType": "SQLServerEfDbContext" //SQLServerEfDbContext, InMemoryEfDbContext, InMemoryCollection
 }
