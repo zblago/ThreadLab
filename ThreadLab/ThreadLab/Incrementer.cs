@@ -26,7 +26,7 @@ namespace ThreadLab
         static Incrementer()
         {
             var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
+                .SetBasePath(AppContext.BaseDirectory)
                 .AddJsonFile("appsettings.json", optional: false)
                 .Build();
 
@@ -80,7 +80,7 @@ namespace ThreadLab
 
             _incrementerRepository.UpdateThreadJobDateTimeFinished(threadJobId);
             stopWatch.Stop();
-            Console.WriteLine("All threads are done. Time elapsed = " + stopWatch.Elapsed.TotalSeconds + ". SetCount = " + _setCount + ", WaitCount = " + _waitCount);
+            Console.WriteLine("All threads are done. Time elapsed = " + stopWatch.Elapsed.TotalSeconds + ". SetCount = " + _setCount + ", WaitCount = " + _waitCount + ",  ThreadCount = " + numberOfThreads + ", Batch size (number of increments per batch) = " + _numberOfIncrementsPerThread);
             Console.WriteLine("Running tests now...");
 
             var hasDuplicateStartNumber = _incrementerRepository.HasDuplicateStartNumber(threadJobId);

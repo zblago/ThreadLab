@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-namespace ThreadLab.Database
+﻿namespace ThreadLab.Database
 {
     internal class IncrementerMemoryRepository : IIncrementerRepository
     {
