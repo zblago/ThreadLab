@@ -9,7 +9,7 @@ Available `StorageType` values:
 * `InMemoryEfDbContext` - in-memory DB context
 * `InMemoryCollection` - raw C# (CLR list)
 
-# Choose one of the followin, DB setup or EF Core Migrations to create DB
+If you go with `SQLServerEfDbContext`, choose one of the following: DB setup or EF Core Migrations to create DB
 
 ## DB setup
 
