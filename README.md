@@ -1,12 +1,12 @@
 # ThreadLab
 
-Showcase for demonstrating communication between threads. You run console application without any setup, which is default option. However, if you want DB setup
+Showcase for demonstrating communication between threads. You can run a console application without any setup, which is the default option. However, if you want a DB setup
 follow one of the following options to create Microsoft SQL Server database.
 
 Available `StorageType` values:
 
 * `SQLServerEfDbContext` - physical DB instance
-* `InMemoryEfDbContext` - in memory DB context
+* `InMemoryEfDbContext` - in-memory DB context
 * `InMemoryCollection` - raw C# (CLR list)
 
 ## DB setup
