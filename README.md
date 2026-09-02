@@ -3,9 +3,11 @@
 Showcase for demonstrating communication between threads. You run console application without any setup, which is default option. However, if you want DB setup
 follow one of the following options to create Microsoft SQL Server database.
 
-```SQLServerEfDbContext``` - creates physical DB instance
-```InMemoryEfDbContext``` - in memory DB context
-```InMemoryCollection``` - raw C# (CLR list)
+Available `StorageType` values:
+
+* `SQLServerEfDbContext` - physical DB instance
+* `InMemoryEfDbContext` - in memory DB context
+* `InMemoryCollection` - raw C# (CLR list)
 
 ## DB setup
 
@@ -23,14 +25,6 @@ For example:
   "StorageType": "SQLServerEfDbContext" //SQLServerEfDbContext, InMemoryEfDbContext, InMemoryCollection
 }
 ```
-
-Available `StorageType` values:
-
-* `SQLServerEfDbContext`
-* `InMemoryEfDbContext`
-* `InMemoryCollection`
-
-
 ## EF Core Migrations
 
 1. Visual Studio
